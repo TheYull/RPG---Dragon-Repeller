@@ -92,6 +92,18 @@ const locations = [
     "button functions": [restart, restart, restart],
     text: "Ви програли. ☠️",
   },
+  {
+    name: "перемога",
+    "button text": ["ПОВТОРИТИ?", "ПОВТОРИТИ?", "ПОВТОРИТИ?"],
+    "button functions": [restart, restart, restart],
+    text: "Ви перемогли дракона! ВИ ВИГРАЛИ ГРУ! 🎉",
+  },
+  {
+    name: "пасхальне яйце",
+    "button text": ["2", "8", "Піти на міську площу?"],
+    "button functions": [pickTwo, pickEight, goTown],
+    text: "Ви знаходите таємну гру. Виберіть число вище. Десять чисел будуть обрані випадковим чином від 0 до 10. Якщо вибране вами число збігається з одним із випадкових чисел, ви виграли!",
+  },
 ];
 
 // initialize buttons
@@ -192,16 +204,35 @@ function attack() {
   text.innerText = "Монстр - " + monsters[fighting].name + " атакує.";
   text.innerText +=
     " Ви атакуєте його своїм " + weapons[currentWeapon].name + ".";
-  health -= monsters[fighting].level;
-  monsterHealth -=
-    weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1;
-  healthText.innerText = health;
-  monsterHealthText.innerText = monsterHealth;
+  health -= getMonsterAttackValue(monsters[fighting].level);
+  if (isMonsterHit()) {
+    monsterHealth -=
+      weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1;
+    healthText.innerText = health;
+    monsterHealthText.innerText = monsterHealth;
+  } else {
+    text.innerText += " Ви промахнулися.";
+  }
+
   if (health <= 0) {
     lose();
   } else if (monsterHealth <= 0) {
-    defeatMonster();
+    fighting === 2 ? winGame() : defeatMonster();
   }
+
+  if (Math.random() <= 0.1 && inventory.length !== 1) {
+    text.innerText += " Ваш " + inventory.pop() + " ламається.";
+    currentWeapon--;
+  }
+}
+
+function getMonsterAttackValue(level) {
+  const hit = level * 5 - Math.floor(Math.random() * xp);
+  console.log(hit);
+  return hit > 0 ? hit : 0;
+}
+function isMonsterHit() {
+  return Math.random() > 0.2 || health < 20;
 }
 
 function dodge() {
@@ -220,6 +251,10 @@ function lose() {
   update(locations[5]);
 }
 
+function winGame() {
+  update(locations[6]);
+}
+
 function restart() {
   xp = 0;
   health = 100;
@@ -230,4 +265,18 @@ function restart() {
   healthText.innerText = health;
   xpText.innerText = xp;
   goTown();
+}
+
+function easterEgg() {
+  update(locations[7]);
+}
+function pickTwo() {
+  pick(2);
+}
+function pickEight() {
+  pick(8);
+}
+
+function pick(guess) {
+  const numbers = [];
 }
