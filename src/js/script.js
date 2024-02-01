@@ -83,7 +83,7 @@ const locations = [
       "Йдіть на міську площу",
       "Йдіть на міську площу",
     ],
-    "button functions": [goTown, goTown, goTown],
+    "button functions": [goTown, goTown, easterEgg],
     text: 'Помираючи, монстр кричить "Агрр!". Ви отримуєте бали досвіду і знаходите золото.',
   },
   {
@@ -279,4 +279,23 @@ function pickEight() {
 
 function pick(guess) {
   const numbers = [];
+  while (numbers.length < 10) {
+    numbers.push(Math.floor(Math.random() * 11));
+  }
+  text.innerText = "Ви вибрали " + guess + ". Ось випадкові числа:\n";
+  for (let i = 0; i < 10; i++) {
+    text.innerText += numbers[i] + "\n";
+    if (numbers.includes(guess)) {
+      text.innerText += "Чудово! Ви виграли 20 золотих!";
+      gold += 20;
+      goldText.innerText = gold;
+    } else {
+      text.innerText += "Не вірно! Ви втрачаєте 10 здоров'я!";
+      health -= 10;
+      healthText.innerText = health;
+      if (health <= 0) {
+        lose();
+      }
+    }
+  }
 }
